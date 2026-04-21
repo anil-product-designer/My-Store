@@ -26,12 +26,13 @@ The helper files are:
 - `src/lib/supabase-config.js`
 - `src/lib/supabase-todos-example.js`
 
-## Included in this first build
+## Included in this build
 
-- Splash screen concept: `TRACE`
-- First-launch setup flow for Supabase URL and anon key
-- Projects dashboard with search, category filters, and create/edit/delete
-- Project view with stats, tag/status filters, decision timeline, and export actions
-- Decision detail modal, editable decision form, and presentation mode
-- Seeded demo content stored locally with Zustand persistence
-- Supabase-ready configuration helpers and SQL setup guidance from the PRD
+- **Dynamic Splash Screen**: Brand concept `TRACE` with smooth transitions.
+- **Persistent Storage**: Full Supabase integration for Projects and Decisions.
+- **Offline Fallback**: Zustand persistence with localStorage for demo mode and optimistic updates.
+- **Projects Dashboard**: Advanced search, category filters, and full CRUD operations.
+- **Decision Timeline**: Visual before/after tracking, tag/status filters, and rationale documentation.
+- **Presentation Mode**: Full-screen storytelling mode for walking through design choices.
+- **PDF Export**: Print-ready styles for exporting decision logs.
+- **Share Flows**: Read-only public share view logic implemented.
