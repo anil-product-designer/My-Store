@@ -1178,18 +1178,16 @@ function DecisionModal({ project, decision, decisions, onClose, onSave }) {
     setForm((current) => ({
       ...current,
       [key]: imageUrl,
+      [`${key}File`]: file,
     }));
   };
 
   const existingTags = Array.from(new Set(decisions.flatMap((item) => item.tags || [])));
 
   const handleClipboardImage = async (key) => {
-    const imageUrl = await readClipboardImage();
-    if (imageUrl) {
-      setForm((current) => ({
-        ...current,
-        [key]: imageUrl,
-      }));
+    const file = await readClipboardImageFile();
+    if (file) {
+      handleImageFile(key, file);
     }
   };
 
@@ -1632,10 +1630,10 @@ function Metric({ label, value }) {
   );
 }
 
-async function readClipboardImage() {
+async function readClipboardImageFile() {
   try {
     if (!navigator.clipboard?.read) {
-      return '';
+      return null;
     }
 
     const items = await navigator.clipboard.read();
@@ -1643,14 +1641,15 @@ async function readClipboardImage() {
       const imageType = item.types.find((type) => type.startsWith('image/'));
       if (imageType) {
         const blob = await item.getType(imageType);
-        return URL.createObjectURL(blob);
+        const ext = imageType.split('/')[1] || 'png';
+        return new File([blob], `clipboard-${Date.now()}.${ext}`, { type: imageType });
       }
     }
   } catch {
-    return '';
+    return null;
   }
 
-  return '';
+  return null;
 }
 
 function EmptyState({ title, description, actionLabel, onAction, secondaryActionLabel = '', onSecondaryAction }) {

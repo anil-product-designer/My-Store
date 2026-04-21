@@ -47,6 +47,42 @@ export const testSupabaseConnection = async (url, anonKey) => {
   }
 };
 
+export const uploadImageToStorage = async (supabase, file, projectId, decisionId, type) => {
+  if (!supabase || !file) return null;
+  
+  // Create a unique name to avoid caching issues on replace
+  const timestamp = new Date().getTime();
+  const ext = file.name.split('.').pop();
+  const path = `${projectId}/${decisionId}/${type}-${timestamp}.${ext}`;
+  
+  const { error } = await supabase.storage
+    .from('design-images')
+    .upload(path, file, { upsert: true });
+
+  if (error) throw error;
+  
+  const { data: publicUrlData } = supabase.storage
+    .from('design-images')
+    .getPublicUrl(path);
+
+  return publicUrlData.publicUrl;
+};
+
+export const deleteImageFromStorage = async (supabase, url) => {
+  if (!supabase || !url) return;
+  try {
+    const bucketStr = '/design-images/';
+    const pathIdx = url.indexOf(bucketStr);
+    if (pathIdx !== -1) {
+      const path = url.substring(pathIdx + bucketStr.length);
+      await supabase.storage.from('design-images').remove([path]);
+    }
+  } catch (e) {
+    console.warn("Could not delete old image:", e);
+  }
+};
+
+
 export const sqlSetupBlocks = [
   `CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
