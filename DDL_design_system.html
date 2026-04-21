@@ -1,0 +1,560 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#FF4802;
+  --brand-dim:#CC3A02;
+  --brand-faint:#FFF1EC;
+  --brand-mid:#FF6830;
+  --black:#0A0A0A;
+  --white:#FFFFFF;
+  --g50:#FAFAFA;
+  --g100:#F4F4F4;
+  --g200:#E8E8E8;
+  --g300:#D1D1D1;
+  --g400:#ABABAB;
+  --g500:#767676;
+  --g600:#555555;
+  --g700:#333333;
+  --g800:#1A1A1A;
+  --mono:'JetBrains Mono',monospace;
+  --body:'Roboto',sans-serif;
+  --radius-sm:4px;
+  --radius-md:8px;
+  --radius-lg:12px;
+
+  /* 4px Spacing System */
+  --sp-1:4px;
+  --sp-2:8px;
+  --sp-3:12px;
+  --sp-4:16px;
+  --sp-5:20px;
+  --sp-6:24px;
+  --sp-8:32px;
+  --sp-10:40px;
+  --sp-12:48px;
+  --sp-16:64px;
+  --sp-20:80px;
+  --sp-24:96px;
+  --sp-32:128px;
+
+  /* Default Desktop Grid (12-col) */
+  --grid-cols: 12;
+  --grid-gutter: 16px;
+  --grid-margin: 64px;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --grid-cols: 8;
+    --grid-margin: 48px;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --grid-cols: 4;
+    --grid-margin: 20px;
+  }
+}
+body{font-family:var(--body);background:var(--g50);color:var(--black)}
+
+.ds-container{width:100%;max-width:1440px;margin:0 auto;padding:0 var(--grid-margin)}
+.ds-wrap{padding:0 0 var(--sp-12)}
+
+/* Flexbox Grid System (Auto-layout concept) */
+.grid{display:flex;flex-wrap:wrap;gap:var(--grid-gutter);margin-bottom:var(--sp-8)}
+.col{flex:1;min-width:0}
+
+/* Column Utilities for 12/8/4 logic */
+.col-1 { flex: 0 0 calc((100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols)); }
+.col-2 { flex: 0 0 calc((100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols) * 2 + var(--grid-gutter)); }
+.col-3 { flex: 0 0 calc((100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols) * 3 + var(--grid-gutter) * 2); }
+.col-4 { flex: 0 0 calc((100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols) * 4 + var(--grid-gutter) * 3); }
+.col-6 { flex: 0 0 calc((100% - (var(--grid-cols) - 1) * var(--grid-gutter)) / var(--grid-cols) * 6 + var(--grid-gutter) * 5); }
+.col-full { flex: 0 0 100%; }
+
+.ds-header{background:var(--black);padding:var(--sp-10) var(--sp-8) var(--sp-8);margin:0 calc(var(--grid-margin) * -1) 0;position:relative}
+.ds-header-eyebrow{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:0.12em;color:var(--brand);text-transform:uppercase;margin-bottom:10px}
+.ds-header-title{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--white);line-height:1.1;margin-bottom:6px}
+.ds-header-title span{color:var(--brand)}
+.ds-header-sub{font-family:var(--body);font-size:13px;color:var(--g400);margin-top:8px}
+.ds-header-meta{display:flex;gap:20px;margin-top:20px;padding-top:20px;border-top:1px solid var(--g700)}
+.ds-meta-item{display:flex;flex-direction:column;gap:3px}
+.ds-meta-label{font-family:var(--mono);font-size:9px;color:var(--g500);text-transform:uppercase;letter-spacing:0.1em}
+.ds-meta-val{font-family:var(--mono);font-size:11px;color:var(--white);font-weight:500}
+
+.ds-section{padding:var(--sp-8) var(--sp-8) 0}
+.ds-section-title{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--brand);margin-bottom:var(--sp-4);display:flex;align-items:center;gap:var(--sp-2)}
+.ds-section-title::after{content:'';flex:1;height:1px;background:var(--g200)}
+
+.color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--sp-2)}
+.color-swatch{border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--g200)}
+.swatch-block{height:64px}
+.swatch-info{padding:var(--sp-2) var(--sp-3);background:var(--white)}
+.swatch-name{font-family:var(--mono);font-size:9px;font-weight:600;color:var(--g700);text-transform:uppercase;letter-spacing:0.06em}
+.swatch-hex{font-family:var(--mono);font-size:10px;color:var(--g500);margin-top:2px}
+.swatch-usage{font-family:var(--body);font-size:10px;color:var(--g400);margin-top:3px}
+
+.grey-strip{display:flex;gap:0;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--g200);margin-top:var(--sp-2)}
+.grey-cell{flex:1;padding:var(--sp-3) 0 var(--sp-2);text-align:center}
+.grey-cell-label{font-family:var(--mono);font-size:8px;color:var(--g500)}
+.grey-cell-val{font-family:var(--mono);font-size:8px;margin-top:2px}
+
+.type-block{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--g200)}
+.type-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.type-meta{display:flex;gap:12px;margin-bottom:8px;align-items:center}
+.type-meta-chip{font-family:var(--mono);font-size:9px;font-weight:600;padding:2px 7px;border-radius:100px;background:var(--g100);color:var(--g600);text-transform:uppercase;letter-spacing:0.06em}
+.type-meta-chip.brand{background:var(--brand-faint);color:var(--brand)}
+
+.scale-row{display:flex;flex-direction:column;gap:6px}
+.scale-item{display:flex;align-items:baseline;gap:12px}
+.scale-item-label{font-family:var(--mono);font-size:9px;color:var(--g400);min-width:64px;flex-shrink:0}
+.scale-item-sample-mono{font-family:var(--mono)}
+.scale-item-sample-roboto{font-family:var(--body)}
+
+.spacing-grid{display:flex;flex-direction:column;gap:8px}
+.spacing-row{display:flex;align-items:center;gap:12px}
+.spacing-bar-wrap{height:20px;display:flex;align-items:center}
+.spacing-bar{height:8px;background:var(--brand);border-radius:2px}
+.spacing-label{font-family:var(--mono);font-size:10px;color:var(--g600);min-width:36px}
+.spacing-px{font-family:var(--mono);font-size:10px;color:var(--g400)}
+
+.comp-grid{display:flex;flex-direction:column;gap:24px}
+.comp-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.comp-label{font-family:var(--mono);font-size:9px;color:var(--g500);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+
+.btn{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.04em;border:none;cursor:pointer;border-radius:var(--radius-md);padding:9px 18px;transition:all 0.15s;text-transform:uppercase}
+.btn-primary{background:var(--brand);color:var(--white)}
+.btn-primary:hover{background:var(--brand-dim)}
+.btn-secondary{background:var(--black);color:var(--white)}
+.btn-secondary:hover{background:var(--g700)}
+.btn-ghost{background:transparent;color:var(--black);border:1.5px solid var(--g300)}
+.btn-ghost:hover{border-color:var(--black)}
+.btn-danger{background:transparent;color:#E53935;border:1.5px solid #FFCDD2}
+.btn-danger:hover{background:#FFF5F5}
+.btn-sm{padding:var(--sp-2) var(--sp-3);font-size:10px}
+.btn-icon{padding:var(--sp-2);display:flex;align-items:center;justify-content:center;border-radius:var(--radius-md);background:var(--g100);color:var(--g600);border:1px solid var(--g200);cursor:pointer}
+
+.input-wrap{display:flex;flex-direction:column;gap:var(--sp-1);width:240px}
+.input-label{font-family:var(--mono);font-size:9px;font-weight:600;color:var(--g600);text-transform:uppercase;letter-spacing:0.08em}
+.input-field{font-family:var(--body);font-size:13px;padding:9px 12px;border:1.5px solid var(--g200);border-radius:var(--radius-md);background:var(--white);color:var(--black);outline:none;transition:border-color 0.15s}
+.input-field:focus{border-color:var(--brand)}
+.input-field.error{border-color:#E53935}
+.input-hint{font-family:var(--body);font-size:10px;color:var(--g400)}
+.input-hint.error{color:#E53935}
+
+.badge-row{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center}
+.badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.08em;padding:var(--sp-1) var(--sp-2);border-radius:100px;text-transform:uppercase}
+.badge-draft{background:var(--g100);color:var(--g500)}
+.badge-implemented{background:#E8F0FE;color:#1A56DB}
+.badge-shipped{background:#EAFAF1;color:#0D7B47}
+.badge-brand{background:var(--brand-faint);color:var(--brand)}
+.badge-dark{background:var(--black);color:var(--white)}
+
+.tag{font-family:var(--body);font-size:11px;font-weight:500;padding:var(--sp-1) var(--sp-2);border-radius:100px}
+.tag-1{background:#FFF3E0;color:#E65100}
+.tag-2{background:#F3E5F5;color:#6A1B9A}
+.tag-3{background:#E3F2FD;color:#0D47A1}
+.tag-4{background:#E8F5E9;color:#1B5E20}
+.tag-5{background:#FCE4EC;color:#880E4F}
+.tag-6{background:#E0F7FA;color:#006064}
+.tag-7{background:#FFF8E1;color:#F57F17}
+.tag-8{background:#F1F8E9;color:#33691E}
+
+.card{background:var(--white);border:1px solid var(--g200);border-radius:var(--radius-lg);overflow:hidden}
+.project-card{width:100%;padding:var(--sp-5)}
+.project-card-accent{height:var(--sp-1);background:var(--brand);margin:calc(var(--sp-5) * -1) calc(var(--sp-5) * -1) var(--sp-4);width:calc(100% + (var(--sp-5) * 2))}
+.project-card-accent.c2{background:#3B82F6}
+.project-card-accent.c3{background:#10B981}
+.project-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--sp-2)}
+.project-card-name{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--black);line-height:1.2}
+.project-card-desc{font-family:var(--body);font-size:12px;color:var(--g500);margin-bottom:var(--sp-4);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.project-card-footer{display:flex;justify-content:space-between;align-items:center}
+.project-card-count{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--g400)}
+.project-card-date{font-family:var(--mono);font-size:9px;color:var(--g400)}
+
+.decision-card{padding:0}
+.decision-img-row{display:flex;gap:0}
+.decision-img-before{flex:1;height:88px;background:linear-gradient(135deg,var(--g100),var(--g200));display:flex;align-items:center;justify-content:center}
+.decision-img-arrow{width:28px;background:var(--g50);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.decision-img-after{flex:1;height:88px;background:linear-gradient(135deg,#FFF1EC,#FFD9C8);display:flex;align-items:center;justify-content:center}
+.decision-img-label{font-family:var(--mono);font-size:9px;color:var(--g400);text-transform:uppercase;letter-spacing:0.06em}
+.decision-body{padding:var(--sp-4) var(--sp-4)}
+.decision-title-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--sp-1)}
+.decision-title{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--black);flex:1;line-height:1.3}
+.decision-date{font-family:var(--mono);font-size:9px;color:var(--g400);flex-shrink:0;margin-left:10px}
+.decision-desc{font-family:var(--body);font-size:11px;color:var(--g500);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:10px}
+.decision-chips{display:flex;flex-wrap:wrap;gap:var(--sp-1);align-items:center}
+
+.divider-demo{display:flex;flex-direction:column;gap:10px}
+.divider-h{height:1px;background:var(--g200);width:100%}
+.divider-brand{height:2px;background:var(--brand);width:40px}
+.divider-thick{height:4px;background:var(--black);border-radius:2px;width:24px}
+
+.icon-grid{display:flex;flex-wrap:wrap;gap:10px}
+.icon-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px;border:1px solid var(--g200);border-radius:var(--radius-md);min-width:52px}
+.icon-svg{width:18px;height:18px;stroke:var(--g700);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.icon-label{font-family:var(--mono);font-size:8px;color:var(--g400);text-align:center}
+
+.toast{display:flex;align-items:center;gap:var(--sp-2);padding:var(--sp-2) var(--sp-4);border-radius:var(--radius-md);font-family:var(--body);font-size:12px;width:fit-content;max-width:320px}
+.toast-success{background:#EAFAF1;border:1px solid #C3F0D6;color:#0D7B47}
+.toast-error{background:#FFF5F5;border:1px solid #FFCDD2;color:#C62828}
+.toast-info{background:var(--black);color:var(--white)}
+.toast-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.toast-dot-s{background:#0D7B47}
+.toast-dot-e{background:#C62828}
+.toast-dot-i{background:var(--brand)}
+
+.modal-preview{background:var(--white);border:1px solid var(--g200);border-radius:var(--radius-lg);overflow:hidden;max-width:340px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:var(--sp-4) var(--sp-5);border-bottom:1px solid var(--g100)}
+.modal-title{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--black);text-transform:uppercase;letter-spacing:0.06em}
+.modal-close{width:22px;height:22px;border-radius:var(--radius-sm);background:var(--g100);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--g500)}
+.modal-body{padding:var(--sp-4) var(--sp-5)}
+.modal-footer{padding:var(--sp-3) var(--sp-5);border-top:1px solid var(--g100);display:flex;justify-content:flex-end;gap:var(--sp-2);background:var(--g50)}
+
+.pair-preview{display:flex;gap:0;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--g200);margin-top:0}
+.pair-col{flex:1;padding:18px 20px}
+.pair-col:first-child{border-right:1px solid var(--g100)}
+.pair-col-label{font-family:var(--mono);font-size:8px;text-transform:uppercase;letter-spacing:0.12em;color:var(--brand);margin-bottom:12px;font-weight:600}
+.pair-name{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--black);margin-bottom:2px}
+.pair-usage{font-family:var(--body);font-size:11px;color:var(--g500)}
+.pair-sample-mono{font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--g700);margin-top:8px}
+.pair-sample-body{font-family:var(--body);font-size:11px;line-height:1.7;color:var(--g700);margin-top:8px}
+</style>
+
+<div class="ds-container">
+<div class="ds-wrap">
+
+<div class="ds-header">
+  <div class="ds-header-eyebrow">Design System · v1.0</div>
+  <div class="ds-header-title">DDL <span>//</span> Design Decision Log</div>
+  <div class="ds-header-sub">Design system for the Design Decision Log web application.</div>
+  <div class="ds-header-meta">
+    <div class="ds-meta-item"><span class="ds-meta-label">Display</span><span class="ds-meta-val">JetBrains Mono</span></div>
+    <div class="ds-meta-item"><span class="ds-meta-label">Body</span><span class="ds-meta-val">Roboto</span></div>
+    <div class="ds-meta-item"><span class="ds-meta-label">Brand</span><span class="ds-meta-val" style="color:var(--brand)">#FF4802</span></div>
+    <div class="ds-meta-item"><span class="ds-meta-label">Support</span><span class="ds-meta-val">#000 · #FFF · Grey</span></div>
+  </div>
+</div>
+
+<div class="ds-section">
+  <div class="ds-section-title">01 · Colors</div>
+
+  <div class="color-grid">
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#FF4802"></div>
+      <div class="swatch-info"><div class="swatch-name">Brand</div><div class="swatch-hex">#FF4802</div><div class="swatch-usage">CTAs, active states, accents</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#CC3A02"></div>
+      <div class="swatch-info"><div class="swatch-name">Brand Dim</div><div class="swatch-hex">#CC3A02</div><div class="swatch-usage">Hover state of brand</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#FF6830"></div>
+      <div class="swatch-info"><div class="swatch-name">Brand Mid</div><div class="swatch-hex">#FF6830</div><div class="swatch-usage">Illustrations, highlights</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#FFF1EC"></div>
+      <div class="swatch-info"><div class="swatch-name">Brand Faint</div><div class="swatch-hex">#FFF1EC</div><div class="swatch-usage">Pill backgrounds, alerts</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#0A0A0A"></div>
+      <div class="swatch-info"><div class="swatch-name">Black</div><div class="swatch-hex">#0A0A0A</div><div class="swatch-usage">Text, secondary CTA</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-block" style="background:#FFFFFF;border-bottom:1px solid var(--g200)"></div>
+      <div class="swatch-info"><div class="swatch-name">White</div><div class="swatch-hex">#FFFFFF</div><div class="swatch-usage">Cards, surfaces, text on dark</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px">
+    <div class="comp-label">Grey Scale</div>
+    <div class="grey-strip">
+      <div class="grey-cell" style="background:#FAFAFA"><div class="grey-cell-label" style="color:#999">G50</div><div class="grey-cell-val" style="color:#999;font-family:var(--mono);font-size:8px">App BG</div></div>
+      <div class="grey-cell" style="background:#F4F4F4"><div class="grey-cell-label" style="color:#888">G100</div><div class="grey-cell-val" style="color:#888;font-family:var(--mono);font-size:8px">Chips</div></div>
+      <div class="grey-cell" style="background:#E8E8E8"><div class="grey-cell-label" style="color:#777">G200</div><div class="grey-cell-val" style="color:#777;font-family:var(--mono);font-size:8px">Borders</div></div>
+      <div class="grey-cell" style="background:#D1D1D1"><div class="grey-cell-label" style="color:#666">G300</div><div class="grey-cell-val" style="color:#666;font-family:var(--mono);font-size:8px">Disabled</div></div>
+      <div class="grey-cell" style="background:#ABABAB"><div class="grey-cell-label" style="color:#444">G400</div><div class="grey-cell-val" style="color:#444;font-family:var(--mono);font-size:8px">Hints</div></div>
+      <div class="grey-cell" style="background:#767676"><div class="grey-cell-label" style="color:#fff">G500</div><div class="grey-cell-val" style="color:#fff;font-family:var(--mono);font-size:8px">Muted</div></div>
+      <div class="grey-cell" style="background:#555555"><div class="grey-cell-label" style="color:#ddd">G600</div><div class="grey-cell-val" style="color:#ddd;font-family:var(--mono);font-size:8px">Labels</div></div>
+      <div class="grey-cell" style="background:#333333"><div class="grey-cell-label" style="color:#ccc">G700</div><div class="grey-cell-val" style="color:#ccc;font-family:var(--mono);font-size:8px">Body</div></div>
+      <div class="grey-cell" style="background:#1A1A1A"><div class="grey-cell-label" style="color:#bbb">G800</div><div class="grey-cell-val" style="color:#bbb;font-family:var(--mono);font-size:8px">Heads</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px">
+    <div class="comp-label">Semantic Colors (Status use only)</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+      <div style="background:#EAFAF1;border:1px solid #C3F0D6;border-radius:var(--radius-md);padding:8px 14px;font-family:var(--mono);font-size:10px;color:#0D7B47;font-weight:600">Shipped · #0D7B47</div>
+      <div style="background:#E8F0FE;border:1px solid #C0CFFF;border-radius:var(--radius-md);padding:8px 14px;font-family:var(--mono);font-size:10px;color:#1A56DB;font-weight:600">Implemented · #1A56DB</div>
+      <div style="background:var(--g100);border:1px solid var(--g300);border-radius:var(--radius-md);padding:8px 14px;font-family:var(--mono);font-size:10px;color:var(--g500);font-weight:600">Draft · G500</div>
+      <div style="background:#FFF5F5;border:1px solid #FFCDD2;border-radius:var(--radius-md);padding:8px 14px;font-family:var(--mono);font-size:10px;color:#C62828;font-weight:600">Danger · #C62828</div>
+    </div>
+  </div>
+</div>
+
+<div class="ds-section" style="margin-top:28px">
+  <div class="ds-section-title">02 · Typography</div>
+
+  <div class="pair-preview">
+    <div class="pair-col">
+      <div class="pair-col-label">Display / UI</div>
+      <div class="pair-name">JetBrains Mono</div>
+      <div class="pair-usage">Headings, labels, tags, code, buttons, metadata, eyebrows</div>
+      <div class="pair-sample-mono">ABCDEFGHIJKLM<br>NOPQRSTUVWXYZ<br>abcdefghijklmno<br>pqrstuvwxyz<br>0123456789 !@#$%</div>
+    </div>
+    <div class="pair-col">
+      <div class="pair-col-label">Body / Content</div>
+      <div class="pair-name">Roboto</div>
+      <div class="pair-usage">Body text, descriptions, rationale, form inputs, placeholder, tooltips</div>
+      <div class="pair-sample-body">ABCDEFGHIJKLM<br>NOPQRSTUVWXYZ<br>abcdefghijklmno<br>pqrstuvwxyz<br>0123456789 !@#$%</div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px">
+    <div class="comp-label" style="margin-bottom:10px">JetBrains Mono Scale</div>
+    <div class="scale-row">
+      <div class="scale-item"><span class="scale-item-label" style="font-family:var(--mono);font-size:9px;color:var(--g400)">32px / 700</span><span class="scale-item-sample-mono" style="font-size:28px;font-weight:700;color:var(--black)">Decision Log</span></div>
+      <div class="scale-item"><span class="scale-item-label" style="font-family:var(--mono);font-size:9px;color:var(--g400)">20px / 700</span><span class="scale-item-sample-mono" style="font-size:20px;font-weight:700;color:var(--black)">Project Title</span></div>
+      <div class="scale-item"><span class="scale-item-label" style="font-family:var(--mono);font-size:9px;color:var(--g400)">14px / 700</span><span class="scale-item-sample-mono" style="font-size:14px;font-weight:700;color:var(--black)">Decision Card Title</span></div>
+      <div class="scale-item"><span class="scale-item-label" style="font-family:var(--mono);font-size:9px;color:var(--g400)">12px / 600</span><span class="scale-item-sample-mono" style="font-size:12px;font-weight:600;color:var(--black)">Section Heading</span></div>
+      <div class="scale-item"><span class="scale-item-label" style="font-family:var(--mono);font-size:9px;color:var(--g400)">10px / 600 UC</span><span class="scale-item-sample-mono" style="font-size:10px;font-weight:600;color:var(--brand);text-transform:uppercase;letter-spacing:0.1em">Eyebrow Label</span></div>
+      <div class="scale-item"><span class="scale-item-label" style="font-family:var(--mono);font-size:9px;color:var(--g400)">9px / 500 UC</span><span class="scale-item-sample-mono" style="font-size:9px;font-weight:500;color:var(--g500);text-transform:uppercase;letter-spacing:0.12em">Metadata · Tags · Dates</span></div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px">
+    <div class="comp-label" style="margin-bottom:10px">Roboto Scale</div>
+    <div class="scale-row">
+      <div class="scale-item"><span class="scale-item-label" style="font-family:var(--mono);font-size:9px;color:var(--g400)">16px / 400</span><span class="scale-item-sample-roboto" style="font-size:16px;color:var(--g700)">Body text for descriptions and rationale copy.</span></div>
+      <div class="scale-item"><span class="scale-item-label" style="font-family:var(--mono);font-size:9px;color:var(--g400)">14px / 400</span><span class="scale-item-sample-roboto" style="font-size:14px;color:var(--g700)">Secondary body — form field values, inputs.</span></div>
+      <div class="scale-item"><span class="scale-item-label" style="font-family:var(--mono);font-size:9px;color:var(--g400)">13px / 400</span><span class="scale-item-sample-roboto" style="font-size:13px;color:var(--g600)">Supporting text, descriptions in cards.</span></div>
+      <div class="scale-item"><span class="scale-item-label" style="font-family:var(--mono);font-size:9px;color:var(--g400)">12px / 400</span><span class="scale-item-sample-roboto" style="font-size:12px;color:var(--g500)">Hints, helper text, placeholder, captions.</span></div>
+      <div class="scale-item"><span class="scale-item-label" style="font-family:var(--mono);font-size:9px;color:var(--g400)">11px / 400</span><span class="scale-item-sample-roboto" style="font-size:11px;color:var(--g400)">Footnotes, overflow indicators, minor metadata.</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="ds-section" style="margin-top:var(--sp-6)">
+  <div class="ds-section-title">03 · Spacing (4px Number System)</div>
+  <div class="spacing-grid">
+    <div class="spacing-row"><span class="spacing-label">sp-1</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:var(--sp-1)"></div></div><span class="spacing-px">4px — Micro gaps, icons</span></div>
+    <div class="spacing-row"><span class="spacing-label">sp-2</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:var(--sp-2)"></div></div><span class="spacing-px">8px — Tight padding, small gaps</span></div>
+    <div class="spacing-row"><span class="spacing-label">sp-3</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:var(--sp-3)"></div></div><span class="spacing-px">12px — Button padding, small groups</span></div>
+    <div class="spacing-row"><span class="spacing-label">sp-4</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:var(--sp-4)"></div></div><span class="spacing-px">16px — Standard card internal padding, gutters</span></div>
+    <div class="spacing-row"><span class="spacing-label">sp-5</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:var(--sp-5)"></div></div><span class="spacing-px">20px — Outer padding, mobile margins</span></div>
+    <div class="spacing-row"><span class="spacing-label">sp-6</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:var(--sp-6)"></div></div><span class="spacing-px">24px — Medium section gaps</span></div>
+    <div class="spacing-row"><span class="spacing-label">sp-8</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:var(--sp-8)"></div></div><span class="spacing-px">32px — Large section spacing</span></div>
+    <div class="spacing-row"><span class="spacing-label">sp-12</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:var(--sp-12)"></div></div><span class="spacing-px">48px — Heavy layout breaks, tablet margins</span></div>
+    <div class="spacing-row"><span class="spacing-label">sp-16</span><div class="spacing-bar-wrap"><div class="spacing-bar" style="width:var(--sp-16)"></div></div><span class="spacing-px">64px — Desktop margins, Hero spacing</span></div>
+  </div>
+</div>
+
+<div class="ds-section" style="margin-top:28px">
+  <div class="ds-section-title">04 · Buttons</div>
+  <div class="comp-label">Variants</div>
+  <div class="comp-row" style="margin-bottom:14px">
+    <button class="btn btn-primary">Add Decision</button>
+    <button class="btn btn-secondary">Export PDF</button>
+    <button class="btn btn-ghost">Cancel</button>
+    <button class="btn btn-danger">Delete</button>
+  </div>
+  <div class="comp-label">Sizes</div>
+  <div class="comp-row">
+    <button class="btn btn-primary">Large Button</button>
+    <button class="btn btn-primary btn-sm">Small</button>
+    <div class="btn-icon">
+      <svg class="icon-svg" style="width:14px;height:14px" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    <div class="btn-icon" style="background:var(--brand-faint);border-color:#FFD0B5">
+      <svg class="icon-svg" style="width:14px;height:14px;stroke:var(--brand)" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+  </div>
+</div>
+
+<div class="ds-section" style="margin-top:24px">
+  <div class="ds-section-title">05 · Form Inputs</div>
+  <div style="display:flex;flex-wrap:wrap;gap:16px">
+    <div class="input-wrap">
+      <span class="input-label">Decision Title</span>
+      <input class="input-field" type="text" placeholder="e.g. Redesigned tag flow" />
+      <span class="input-hint">Short label for this design change</span>
+    </div>
+    <div class="input-wrap">
+      <span class="input-label">Date Changed</span>
+      <input class="input-field" type="text" value="Apr 21, 2026" style="border-color:var(--brand)" />
+      <span class="input-hint" style="color:var(--brand)">Focused state</span>
+    </div>
+    <div class="input-wrap">
+      <span class="input-label">Project Name</span>
+      <input class="input-field error" type="text" value="Zenisth AI" />
+      <span class="input-hint error">Project name already exists</span>
+    </div>
+  </div>
+</div>
+
+<div class="ds-section" style="margin-top:var(--sp-6)">
+  <div class="ds-section-title">06 · Status Chips & Tags</div>
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Status Chips</div>
+  <div class="badge-row" style="margin-bottom:var(--sp-4)">
+    <span class="badge badge-draft">Draft</span>
+    <span class="badge badge-implemented">Implemented</span>
+    <span class="badge badge-shipped">Shipped</span>
+    <span class="badge badge-brand">Mobile App</span>
+    <span class="badge badge-dark">Design System</span>
+  </div>
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Category Tags (8-color rotation)</div>
+  <div class="badge-row">
+    <span class="tag tag-1">Navigation</span>
+    <span class="tag tag-2">Typography</span>
+    <span class="tag tag-3">CTA Design</span>
+    <span class="tag tag-4">Color</span>
+    <span class="tag tag-5">Forms</span>
+    <span class="tag tag-6">Layout</span>
+    <span class="tag tag-7">Spacing</span>
+    <span class="tag tag-8">Iconography</span>
+  </div>
+</div>
+
+<div class="ds-section" style="margin-top:var(--sp-6)">
+  <div class="ds-section-title">07 · Cards</div>
+  <div class="comp-label" style="margin-bottom:var(--sp-3)">Project Cards (Responsive 12/8/4 Grid)</div>
+  <div class="grid">
+    <div class="col-4">
+      <div class="card project-card">
+        <div class="project-card-accent"></div>
+        <div class="project-card-top">
+          <div class="project-card-name">Zenisth AI</div>
+          <span class="badge badge-brand" style="font-size:8px;padding:var(--sp-1) var(--sp-2)">Mobile App</span>
+        </div>
+        <div class="project-card-desc">Voice agent platform with translation workspace and tag-based configuration.</div>
+        <div class="project-card-footer"><span class="project-card-count">14 decisions</span><span class="project-card-date">Apr 2026</span></div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card project-card">
+        <div class="project-card-accent c2"></div>
+        <div class="project-card-top">
+          <div class="project-card-name">TransFlow</div>
+          <span class="badge" style="font-size:8px;padding:var(--sp-1) var(--sp-2);background:#E8F0FE;color:#1A56DB;font-family:var(--mono);font-weight:700;text-transform:uppercase;letter-spacing:0.08em">Web App</span>
+        </div>
+        <div class="project-card-desc">AI-powered translation workspace with reviewer roles and billing.</div>
+        <div class="project-card-footer"><span class="project-card-count">8 decisions</span><span class="project-card-date">Mar 2026</span></div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card project-card">
+        <div class="project-card-accent c3"></div>
+        <div class="project-card-top">
+          <div class="project-card-name">DDL v1</div>
+          <span class="badge" style="font-size:8px;padding:var(--sp-1) var(--sp-2);background:#EAFAF1;color:#0D7B47;font-family:var(--mono);font-weight:700;text-transform:uppercase;letter-spacing:0.08em">Dashboard</span>
+        </div>
+        <div class="project-card-desc">Design Decision Log — this product's own design decisions tracked.</div>
+        <div class="project-card-footer"><span class="project-card-count">3 decisions</span><span class="project-card-date">Apr 2026</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-label" style="margin-bottom:var(--sp-3)">Decision Card (Independent Auto Layout)</div>
+  <div style="max-width:320px">
+    <div class="card decision-card">
+      <div class="decision-img-row">
+        <div class="decision-img-before"><span class="decision-img-label">Before</span></div>
+        <div class="decision-img-arrow">
+          <svg style="width:12px;height:12px;stroke:var(--brand);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+        <div class="decision-img-after"><span class="decision-img-label" style="color:var(--brand)">After</span></div>
+      </div>
+      <div class="decision-body">
+        <div class="decision-title-row">
+          <div class="decision-title">Redesigned Tag Creation Flow</div>
+          <div class="decision-date">Apr 18</div>
+        </div>
+        <div class="decision-desc">Replaced dropdown with radio card component to improve AI editing mode visibility and reduce cognitive load.</div>
+        <div class="decision-chips">
+          <span class="badge badge-shipped">Shipped</span>
+          <span class="tag tag-5">Forms</span>
+          <span class="tag tag-1">Navigation</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ds-section" style="margin-top:var(--sp-6)">
+  <div class="ds-section-title">08 · Toasts & Modals</div>
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Toast Notifications</div>
+  <div style="display:flex;flex-direction:column;gap:var(--sp-2);margin-bottom:var(--sp-5)">
+    <div class="toast toast-success"><div class="toast-dot toast-dot-s"></div>Decision saved successfully.</div>
+    <div class="toast toast-error"><div class="toast-dot toast-dot-e"></div>Image upload failed — please try again.</div>
+    <div class="toast toast-info"><div class="toast-dot toast-dot-i"></div>Share link copied to clipboard.</div>
+  </div>
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Modal Header Pattern</div>
+  <div class="modal-preview">
+    <div class="modal-header">
+      <div class="modal-title">New Design Decision</div>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-family:var(--body);font-size:12px;color:var(--g500)">Form content goes here...</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm">Cancel</button>
+      <button class="btn btn-primary btn-sm">Save Decision</button>
+    </div>
+  </div>
+</div>
+
+<div class="ds-section" style="margin-top:var(--sp-6)">
+  <div class="ds-section-title">09 · Border Radius</div>
+  <div style="display:flex;gap:var(--sp-3);align-items:center;flex-wrap:wrap">
+    <div style="width:var(--sp-12);height:var(--sp-12);background:var(--black);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;color:var(--g400)">4px</div>
+    <div style="width:var(--sp-12);height:var(--sp-12);background:var(--black);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;color:var(--g400)">8px</div>
+    <div style="width:var(--sp-12);height:var(--sp-12);background:var(--black);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;color:var(--g400)">12px</div>
+    <div style="width:var(--sp-16);height:var(--sp-6);background:var(--brand);border-radius:100px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;color:var(--white)">Pill</div>
+    <div style="width:var(--sp-12);height:var(--sp-12);background:var(--brand-faint);border:2px solid var(--brand);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center">
+      <svg style="width:var(--sp-4);height:var(--sp-4);stroke:var(--brand);fill:none;stroke-width:2;stroke-linecap:round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+  </div>
+  <div style="margin-top:var(--sp-2);font-family:var(--mono);font-size:9px;color:var(--g400)">4px chips · 8px inputs/buttons · 12px cards/modals · 100px pills · Active selection example</div>
+</div>
+
+<div class="ds-section" style="margin-top:var(--sp-6);padding-bottom:0">
+  <div class="ds-section-title">10 · Dividers</div>
+  <div style="display:flex;flex-direction:column;gap:var(--sp-4);padding-bottom:var(--sp-8)">
+    <div><div style="font-family:var(--mono);font-size:9px;color:var(--g400);margin-bottom:var(--sp-2);text-transform:uppercase;letter-spacing:0.08em">Hairline — Between content rows</div><div class="divider-h"></div></div>
+    <div><div style="font-family:var(--mono);font-size:9px;color:var(--g400);margin-bottom:var(--sp-2);text-transform:uppercase;letter-spacing:0.08em">Brand accent — Section break in presentation mode</div><div class="divider-brand"></div></div>
+    <div><div style="font-family:var(--mono);font-size:9px;color:var(--g400);margin-bottom:var(--sp-2);text-transform:uppercase;letter-spacing:0.08em">Thick — Page section separator</div><div class="divider-thick"></div></div>
+  </div>
+</div>
+
+<div class="ds-section" style="margin-top:var(--sp-6)">
+  <div class="ds-section-title">11 · Layout Grid (Responsive)</div>
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Grid Demonstration (12 Desktop / 8 Tablet / 4 Mobile)</div>
+  <div class="grid" style="background:var(--g100);padding:var(--sp-4);border-radius:var(--radius-lg)">
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">1</div>
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">2</div>
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">3</div>
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">4</div>
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">5</div>
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">6</div>
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">7</div>
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">8</div>
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">9</div>
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">10</div>
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">11</div>
+    <div class="col-1" style="height:64px;background:var(--brand-faint);border:1px dashed var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--brand)">12</div>
+  </div>
+  
+  <div class="comp-label" style="margin-top:var(--sp-4);margin-bottom:var(--sp-2)">Auto-layout Concept (Flex Gap)</div>
+  <div class="grid">
+    <div class="col-4" style="height:80px;background:var(--white);border:1px solid var(--g200);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px">Col 4 (1/3)</div>
+    <div class="col-8" style="height:80px;background:var(--white);border:1px solid var(--g200);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px">Col 8 (2/3)</div>
+  </div>
+</div>
+
+</div>
+</div>
