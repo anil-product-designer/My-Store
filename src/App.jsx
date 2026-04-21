@@ -104,6 +104,11 @@ const createDemoDecision = (project, projectDecisionCount = 0) => {
 function App() {
   const splashComplete = useDDLStore((state) => state.splashComplete);
   const setSplashComplete = useDDLStore((state) => state.setSplashComplete);
+  const init = useDDLStore((state) => state.init);
+
+  useEffect(() => {
+    init();
+  }, [init]);
 
   if (!splashComplete) {
     return <SplashScreen onComplete={setSplashComplete} />;
