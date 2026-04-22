@@ -404,9 +404,8 @@ function DashboardPage() {
               >
                 <div className="project-card-accent" style={{ background: project.color }} />
                 <div className="project-card-top">
-                  <div>
+                  <div className="project-card-header">
                     <h3 className="project-card-name">{project.name}</h3>
-                    <span className="badge badge-brand">{project.category}</span>
                   </div>
                   <div className="card-menu" data-print-hidden="true">
                     <button
@@ -452,6 +451,9 @@ function DashboardPage() {
                   </div>
                 </div>
                 <p className="project-card-desc">{project.description || 'No description yet.'}</p>
+                <div className="project-card-meta">
+                  <span className="badge badge-brand">{project.category}</span>
+                </div>
                 <div className="project-card-footer">
                   <span className="project-card-count">{project.decisionCount} decisions</span>
                   <span className="project-card-date">Updated {formatDate(project.lastUpdated)}</span>
