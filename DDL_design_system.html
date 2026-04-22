@@ -556,5 +556,204 @@ body{font-family:var(--body);background:var(--g50);color:var(--black)}
   </div>
 </div>
 
+<div class="ds-section" style="margin-top:var(--sp-6)">
+  <div class="ds-section-title">12 · React Component Inventory</div>
+  
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Layout & Navigation</div>
+  <div class="pair-preview" style="margin-bottom:var(--sp-4)">
+    <div class="pair-col">
+      <div class="pair-name">AppShell</div>
+      <div class="pair-usage">The primary layout wrapper containing the Sidebar and Topbar. Handles page titles and action buttons.</div>
+    </div>
+    <div class="pair-col">
+      <div class="pair-name">Sidebar</div>
+      <div class="pair-usage">The navigation panel providing links to Dashboard, Projects, Settings, and Design System.</div>
+    </div>
+  </div>
+  <div class="pair-preview" style="margin-bottom:var(--sp-4)">
+    <div class="pair-col">
+      <div class="pair-name">Breadcrumbs</div>
+      <div class="pair-usage">Utility for path-based navigation (e.g., My Projects / Workspace / Decision).</div>
+    </div>
+    <div class="pair-col">
+      <div class="pair-name">PresentationMode</div>
+      <div class="pair-usage">Fullscreen chronological walkthrough for presenting decisions to clients.</div>
+    </div>
+  </div>
+
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Information Display</div>
+  <div class="pair-preview" style="margin-bottom:var(--sp-4)">
+    <div class="pair-col">
+      <div class="pair-name">Metric</div>
+      <div class="pair-usage">Stat block used for displaying numeric indicators (e.g., Total Decisions, This month).</div>
+    </div>
+    <div class="pair-col">
+      <div class="pair-name">FlowStep</div>
+      <div class="pair-usage">Numbered step cards used to explain the application process on the Overview page.</div>
+    </div>
+  </div>
+  <div class="pair-preview" style="margin-bottom:var(--sp-4)">
+    <div class="pair-col">
+      <div class="pair-name">EmptyState</div>
+      <div class="pair-usage">Standardized placeholder for lists or boards containing no items, prompting user action.</div>
+    </div>
+    <div class="pair-col">
+      <div class="pair-name">SectionBlock / ListBlock</div>
+      <div class="pair-usage">Content grouping blocks for cleanly rendering description paragraphs or bulleted lists (Advantages).</div>
+    </div>
+  </div>
+  
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Interactive Form Elements</div>
+  <div class="pair-preview" style="margin-bottom:var(--sp-4)">
+    <div class="pair-col">
+      <div class="pair-name">Field / SelectField</div>
+      <div class="pair-usage">Generic input controls with labels and helper text handling text boundaries.</div>
+    </div>
+    <div class="pair-col">
+      <div class="pair-name">ListEditor</div>
+      <div class="pair-usage">Dynamic input array builder (used for adding/removing items in form lists).</div>
+    </div>
+  </div>
+  <div class="pair-preview" style="margin-bottom:var(--sp-4)">
+    <div class="pair-col">
+      <div class="pair-name">ImageField</div>
+      <div class="pair-usage">Flexible media ingestion supporting direct URL, local file uploads, and clipboard pasting.</div>
+    </div>
+    <div class="pair-col">
+      <div class="pair-name">StatusRadioGroup</div>
+      <div class="pair-usage">Selection pills for picking decision statuses with color coordination logic built-in.</div>
+    </div>
+  </div>
+
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Modals & Overlays</div>
+  <div class="pair-preview" style="margin-bottom:var(--sp-4)">
+    <div class="pair-col">
+      <div class="pair-name">ModalFrame</div>
+      <div class="pair-usage">Base container providing backdrop, title bar, close action, and inner padding constraints for all dialogs.</div>
+    </div>
+    <div class="pair-col">
+      <div class="pair-name">ProjectModal & DecisionModal</div>
+      <div class="pair-usage">Task-specific dialog components managing the state for initializing or updating records.</div>
+    </div>
+  </div>
 </div>
-</div>
+
+<div class="ds-section" style="margin-top:var(--sp-6)">
+  <div class="ds-section-title">13 · UI Component Previews</div>
+
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Metric / Stat Card</div>
+  <div style="display:flex;gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <div style="background:var(--white);border:1px solid var(--g200);border-radius:var(--radius-lg);padding:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-2);min-width:140px">
+      <span style="font-family:var(--mono);font-size:9px;text-transform:uppercase;color:var(--g500);letter-spacing:0.06em">Total decisions</span>
+      <strong style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--black)">14</strong>
+    </div>
+    <div style="background:var(--white);border:1px solid var(--g200);border-radius:var(--radius-lg);padding:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-2);min-width:140px">
+      <span style="font-family:var(--mono);font-size:9px;text-transform:uppercase;color:var(--g500);letter-spacing:0.06em">This month</span>
+      <strong style="font-family:var(--mono);font-size:28px;font-weight:700;color:var(--black)">08</strong>
+    </div>
+  </div>
+
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Flow Step Card</div>
+  <div style="display:flex;gap:var(--sp-4);margin-bottom:var(--sp-6)">
+    <div style="background:var(--white);padding:var(--sp-4);border-radius:var(--radius-lg);border:1px solid var(--g200);width:240px;display:flex;flex-direction:column">
+      <span style="font-family:var(--mono);font-size:10px;color:var(--brand);margin-bottom:var(--sp-2);font-weight:600">01</span>
+      <strong style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--black);margin-bottom:var(--sp-1)">Initialize Workspace</strong>
+      <p style="font-family:var(--body);font-size:12px;color:var(--g500);line-height:1.4">Create a dedicated space for your client or product to keep decision histories organized.</p>
+    </div>
+    <div style="background:var(--white);padding:var(--sp-4);border-radius:var(--radius-lg);border:1px solid var(--g200);width:240px;display:flex;flex-direction:column">
+      <span style="font-family:var(--mono);font-size:10px;color:var(--brand);margin-bottom:var(--sp-2);font-weight:600">02</span>
+      <strong style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--black);margin-bottom:var(--sp-1)">Document Decisions</strong>
+      <p style="font-family:var(--body);font-size:12px;color:var(--g500);line-height:1.4">Capture the 'before & after' while detailing the thinking, advantages, and tradeoffs.</p>
+    </div>
+  </div>
+
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Empty State Example</div>
+  <div style="max-width:400px;margin-bottom:var(--sp-6)">
+    <section style="background:var(--white);padding:var(--sp-8) var(--sp-6);text-align:center;border-radius:var(--radius-lg);border:1px dashed var(--g300)">
+      <div style="width:48px;height:48px;background:var(--g100);border-radius:50%;margin:0 auto var(--sp-4)"></div>
+      <h2 style="font-family:var(--mono);font-size:14px;font-weight:700;margin-bottom:var(--sp-2);color:var(--black)">No projects match your search</h2>
+      <p style="font-family:var(--body);font-size:12px;color:var(--g500);margin-bottom:var(--sp-5);line-height:1.5">Adjust your filters or initialize a new workspace to start logging your design decisions.</p>
+      <div style="display:flex;justify-content:center;gap:var(--sp-2)">
+        <button class="btn btn-primary" type="button">Initialize Workspace</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Breadcrumbs</div>
+  <div style="margin-bottom:var(--sp-6);font-family:var(--body);font-size:12px;color:var(--g500)">
+    <span style="color:var(--brand);font-weight:500;cursor:pointer">My Projects</span> 
+    <span style="margin:0 8px;color:var(--g300)">/</span> 
+    <span style="color:var(--brand);font-weight:500;cursor:pointer">Zenisth AI</span>
+    <span style="margin:0 8px;color:var(--g300)">/</span>
+    <span style="color:var(--g700)">Redesigned Tag Flow</span>
+  </div>
+
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">SectionBlock & ListBlock (Detail Rendering)</div>
+  <div style="margin-bottom:var(--sp-6);background:var(--white);padding:var(--sp-5);border-radius:var(--radius-lg);border:1px solid var(--g200);max-width:600px">
+    <div style="margin-bottom:var(--sp-4)">
+      <span style="font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--brand);margin-bottom:var(--sp-2);display:block;font-weight:600;letter-spacing:0.1em">Description</span>
+      <p style="font-family:var(--body);font-size:14px;color:var(--g700);line-height:1.6">This is a SectionBlock representing the main description paragraph for a decision.</p>
+    </div>
+    <div>
+      <span style="font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--brand);margin-bottom:var(--sp-2);display:block;font-weight:600;letter-spacing:0.1em">Advantages</span>
+      <ul style="font-family:var(--body);font-size:14px;color:var(--g700);line-height:1.6;padding-left:16px">
+        <li style="margin-bottom:4px">This is a ListBlock item</li>
+        <li>Another advantage listed here</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">Advanced Form Elements</div>
+  <div style="display:flex;flex-wrap:wrap;gap:var(--sp-5);margin-bottom:var(--sp-6)">
+    <div style="display:flex;flex-direction:column;gap:var(--sp-1);width:240px">
+      <span style="font-family:var(--mono);font-size:9px;font-weight:600;color:var(--g600);text-transform:uppercase;letter-spacing:0.08em">Read-Only Field</span>
+      <div style="font-family:var(--body);font-size:13px;padding:9px 12px;background:var(--g50);border:1px solid transparent;border-radius:var(--radius-md);color:var(--g600)">Value that cannot be changed</div>
+    </div>
+    
+    <div style="display:flex;flex-direction:column;gap:var(--sp-1);width:240px">
+      <span style="font-family:var(--mono);font-size:9px;font-weight:600;color:var(--g600);text-transform:uppercase;letter-spacing:0.08em">Select Field</span>
+      <select style="font-family:var(--body);font-size:13px;padding:9px 12px;border:1.5px solid var(--g200);border-radius:var(--radius-md);outline:none;background:var(--white);color:var(--black)">
+        <option>Dashboard</option>
+        <option>Mobile App</option>
+      </select>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:var(--sp-1);width:100%;max-width:500px">
+      <span style="font-family:var(--mono);font-size:9px;font-weight:600;color:var(--g600);text-transform:uppercase;letter-spacing:0.08em">Image Field Component</span>
+      <div style="border:1.5px dashed var(--g300);background:var(--g50);border-radius:var(--radius-md);padding:var(--sp-5);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--g500);text-align:center">
+        <svg style="width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;margin-bottom:var(--sp-2)" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+        <span style="font-family:var(--body);font-size:12px;margin-bottom:var(--sp-3)">Add a before/after visual here to make the decision card feel complete.</span>
+        <div style="display:flex;gap:var(--sp-2)">
+          <button class="btn btn-ghost btn-sm" type="button" style="display:flex;align-items:center;gap:6px"><svg style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Upload image</button>
+          <button class="btn btn-ghost btn-sm" type="button" style="display:flex;align-items:center;gap:6px"><svg style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Paste image</button>
+        </div>
+      </div>
+    </div>
+    
+    <div style="display:flex;flex-direction:column;gap:var(--sp-1);width:100%;max-width:500px">
+      <span style="font-family:var(--mono);font-size:9px;font-weight:600;color:var(--g600);text-transform:uppercase;letter-spacing:0.08em">List Editor Component</span>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:var(--sp-2)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <input class="input-field" style="flex:1" type="text" value="Allows dynamic array item addition" />
+          <button class="btn btn-icon" style="flex-shrink:0" type="button"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="width:fit-content;display:flex;align-items:center;gap:6px" type="button"><svg style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add item</button>
+    </div>
+  </div>
+
+  <div class="comp-label" style="margin-bottom:var(--sp-2)">App Layout / Presentation Preview</div>
+  <div style="margin-bottom:var(--sp-6);height:180px;max-width:600px;background:var(--black);border-radius:var(--radius-lg);padding:var(--sp-5);display:flex;flex-direction:column;justify-content:space-between">
+    <div style="display:flex;justify-content:space-between">
+      <div>
+        <span style="font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--brand);margin-bottom:var(--sp-1);display:block;font-weight:600;letter-spacing:0.1em">Presentation mode</span>
+        <strong style="font-family:var(--mono);font-size:18px;font-weight:700;color:var(--white)">Zenisth AI Design Walkthrough</strong>
+      </div>
+      <div><button class="btn btn-ghost" style="color:var(--white);border-color:var(--g700)">Exit</button></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <button class="btn btn-secondary" style="border:1px solid var(--g700)">← Previous</button>
+      <span style="font-family:var(--body);font-size:11px;color:var(--g500)">Keyboard: ← previous, → next</span>
+      <button class="btn btn-primary">Next →</button>
+    </div>
+  </div>

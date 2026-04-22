@@ -5,22 +5,23 @@ import {
   ClipboardPaste,
   Check,
   ChevronLeft,
-  Ellipsis,
   ExternalLink,
-  Eye,
   Copy,
-  FolderPlus,
   Image as ImageIcon,
   Pencil,
   Play,
   Plus,
-  Search,
   Settings,
   Share2,
   Trash2,
   X,
+  LayoutGrid,
+  BookOpen,
+  FolderOpen,
+  BarChart3,
+  Folder,
 } from 'lucide-react';
-import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate, useParams, Link, NavLink } from 'react-router-dom';
 import { categories, presetColors } from './data/seed';
 import { sqlSetupBlocks, testSupabaseConnection } from './lib/supabase';
 import { useDDLStore } from './store/useDDLStore';
@@ -118,6 +119,8 @@ function App() {
     <Routes>
       <Route path="/" element={<HomeRoute />} />
       <Route path="/dashboard" element={<DashboardGate />} />
+      <Route path="/projects" element={<ProjectsGate />} />
+      <Route path="/design-system" element={<DesignSystemGate />} />
       <Route path="/project/:projectId" element={<ProjectRoute readOnly={false} />} />
       <Route path="/project/:projectId/decision/:decisionId" element={<DecisionRoute readOnly={false} />} />
       <Route path="/share/:projectId" element={<ProjectRoute readOnly />} />
@@ -165,7 +168,27 @@ function DashboardGate() {
     return <Navigate to="/" replace />;
   }
 
-  return <DashboardPage />;
+  return <OverviewPage />;
+}
+
+function ProjectsGate() {
+  const config = useDDLStore((state) => state.config);
+
+  if (!config.url || !config.anonKey) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <ProjectsPage />;
+}
+
+function DesignSystemGate() {
+  const config = useDDLStore((state) => state.config);
+
+  if (!config.url || !config.anonKey) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <DesignSystemPage />;
 }
 
 function SetupScreen() {
@@ -294,11 +317,71 @@ function SetupScreen() {
   );
 }
 
-function DashboardPage() {
-  const navigate = useNavigate();
+function OverviewPage() {
   const projects = useDDLStore((state) => state.projects);
   const decisions = useDDLStore((state) => state.decisions);
   const clearConfig = useDDLStore((state) => state.clearConfig);
+
+  const totalProjects = projects.length;
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+  const decisionsThisMonth = decisions.filter(d => {
+    const date = new Date(d.dateChanged);
+    return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+  }).length;
+  const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(new Date());
+
+  return (
+    <AppShell
+      title="Overview"
+      description="A bird's eye view of your design rationale and documentation velocity."
+      actions={
+        <button className="btn btn-ghost" type="button" onClick={() => clearConfig()}>
+          <Settings size={16} />
+          Reset setup
+        </button>
+      }
+    >
+      <div className="stats-row">
+        <div className="stat-card">
+          <div className="stat-icon"><Folder size={20} /></div>
+          <div className="stat-content">
+            <div className="stat-value">{totalProjects}</div>
+            <div className="stat-label">Active Projects</div>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon"><BarChart3 size={20} /></div>
+          <div className="stat-content">
+            <div className="stat-value">{decisionsThisMonth}</div>
+            <div className="stat-label">Decisions in {monthName}</div>
+          </div>
+        </div>
+      </div>
+
+      <section className="dashboard-overview panel">
+        <div className="overview-copy">
+          <div className="eyebrow">The Process</div>
+          <h2>How Trace works</h2>
+          <p>
+            A simple, repeatable workflow for turning design choices into powerful, searchable narratives.
+          </p>
+        </div>
+        <div className="overview-steps">
+          <FlowStep index="01" title="Initialize Workspace" body="Create a dedicated space for your client or product to keep decision histories organized." />
+          <FlowStep index="02" title="Document Decisions" body="Capture the 'before & after' while detailing the thinking, advantages, and tradeoffs behind every move." />
+          <FlowStep index="03" title="Visualize Evolution" body="Use tags and status to transform your log into a chronological story of your project’s evolution." />
+          <FlowStep index="04" title="Present & Share" body="Launch into Presentation Mode or generate secure links to walk stakeholders through your design journey." />
+        </div>
+      </section>
+    </AppShell>
+  );
+}
+
+function ProjectsPage() {
+  const navigate = useNavigate();
+  const projects = useDDLStore((state) => state.projects);
+  const decisions = useDDLStore((state) => state.decisions);
   const addProject = useDDLStore((state) => state.addProject);
   const updateProject = useDDLStore((state) => state.updateProject);
   const deleteProject = useDDLStore((state) => state.deleteProject);
@@ -308,10 +391,7 @@ function DashboardPage() {
   const [quickActions, setQuickActions] = useState(null);
 
   useEffect(() => {
-    if (!quickActions) {
-      return undefined;
-    }
-
+    if (!quickActions) return undefined;
     const handleClose = () => setQuickActions(null);
     window.addEventListener('click', handleClose);
     return () => window.removeEventListener('click', handleClose);
@@ -328,47 +408,25 @@ function DashboardPage() {
     return {
       ...project,
       decisionCount: projectDecisions.length,
-      lastUpdated: projectDecisions[0]?.updatedAt || project.updatedAt,
+      lastUpdated: projectDecisions[0]?.dateChanged || project.updatedAt,
     };
   });
 
   return (
     <AppShell
-      title="Projects Dashboard"
-      description="Track every product decision across projects, then walk any story back with confidence."
+      title="My Projects"
+      description="Manage, organize, and track your active design storyboards."
       actions={
-        <>
-          <button className="btn btn-ghost" type="button" onClick={() => clearConfig()}>
-            <Settings size={16} />
-            Reset setup
-          </button>
-          <button className="btn btn-primary" type="button" onClick={() => setModalState({ type: 'create', project: null })}>
-            <FolderPlus size={16} />
-            Create new project
-          </button>
-        </>
+        <button className="btn btn-primary" type="button" onClick={() => setModalState({ type: 'create', project: null })}>
+          <Plus size={16} />
+          Initialize Workspace
+        </button>
       }
     >
-      <section className="dashboard-overview panel">
-        <div className="overview-copy">
-          <div className="eyebrow">Flow map</div>
-          <h2>Prototype journey from setup to share-ready storytelling</h2>
-          <p>
-            This build now connects the V1 screens as a usable flow: setup, dashboard, project timeline,
-            decision detail, presentation mode, and public share view.
-          </p>
-        </div>
-        <div className="overview-steps">
-          <FlowStep index="01" title="Setup" body="Enter Supabase later or continue in demo mode right now." />
-          <FlowStep index="02" title="Projects" body="Create, filter, search, edit, or remove projects from the dashboard." />
-          <FlowStep index="03" title="Decisions" body="Open decision cards into full detail pages with images and rationale." />
-          <FlowStep index="04" title="Share" body="Preview the read-only public flow and presentation mode before backend wiring." />
-        </div>
-      </section>
       <section className="dashboard-toolbar" data-print-hidden="true">
         <label className="search-field">
           <Search size={16} />
-          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search project name" />
+          <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search by project name..." />
         </label>
         <div className="filter-row">
           {['All', ...categories].map((category) => (
@@ -417,7 +475,7 @@ function DashboardPage() {
                         setModalState({ type: 'edit', project });
                       }}
                     >
-                      <Pencil size={15} />
+                      <Pencil size={14} />
                     </button>
                     <button
                       className="btn btn-icon"
@@ -425,47 +483,34 @@ function DashboardPage() {
                       aria-label={`Delete ${project.name}`}
                       onClick={(event) => {
                         event.stopPropagation();
-                        if (window.confirm(`Delete ${project.name} and all its decisions?`)) {
+                        if (window.confirm('Delete project and all its decisions?')) {
                           deleteProject(project.id);
                         }
                       }}
                     >
-                      <Trash2 size={15} />
+                      <Trash2 size={14} />
                     </button>
-                    <button
-                      className="btn btn-icon"
-                      type="button"
-                      aria-label={`Quick actions for ${project.name}`}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        const rect = event.currentTarget.getBoundingClientRect();
-                        setQuickActions({
-                          project,
-                          x: rect.left,
-                          y: rect.bottom + 8,
-                        });
-                      }}
-                    >
-                      <Ellipsis size={15} />
+                    <button className="btn btn-icon" type="button">
+                      <Ellipsis size={14} />
                     </button>
                   </div>
                 </div>
-                <p className="project-card-desc">{project.description || 'No description yet.'}</p>
+                <p className="project-card-desc">{project.description || 'No description available.'}</p>
                 <div className="project-card-meta">
                   <span className="badge badge-brand">{project.category}</span>
                 </div>
                 <div className="project-card-footer">
-                  <span className="project-card-count">{project.decisionCount} decisions</span>
-                  <span className="project-card-date">Updated {formatDate(project.lastUpdated)}</span>
+                  <span className="project-card-count">{project.decisionCount} Decisions Logged</span>
+                  <span className="project-card-date">Last Updated: {formatDate(project.lastUpdated)}</span>
                 </div>
               </article>
             ))}
         </section>
       ) : (
         <EmptyState
-          title="No projects match this filter"
-          description="Try another category, change your search, or create the first project to start logging decisions."
-          actionLabel="Create project"
+          title="No projects match your search"
+          description="Adjust your filters or initialize a new workspace to start logging your design decisions."
+          actionLabel="Initialize Workspace"
           onAction={() => setModalState({ type: 'create', project: null })}
         />
       )}
@@ -512,8 +557,8 @@ function ProjectRoute({ readOnly }) {
 
   if (!project) {
     return (
-      <AppShell title="Project not found" description="This project id is missing from local state.">
-        <EmptyState title="Missing project" description="The project may have been deleted or not loaded yet." />
+      <AppShell title="Workspace Not Found" description="This project identifier is missing from your local history.">
+        <EmptyState title="Project Unavailable" description="This workspace may have been deleted or the link has expired." />
       </AppShell>
     );
   }
@@ -528,8 +573,8 @@ function DecisionRoute({ readOnly }) {
 
   if (!project || !decision || decision.projectId !== project.id) {
     return (
-      <AppShell title="Decision not found" description="This decision route is missing from local state.">
-        <EmptyState title="Missing decision" description="The decision may have been deleted or the URL is incomplete." />
+      <AppShell title="Decision Not Found" description="This entry is no longer part of the project history.">
+        <EmptyState title="Missing Decision" description="The decision entry may have been removed or the URL is incorrect." />
       </AppShell>
     );
   }
@@ -548,6 +593,8 @@ function ProjectPage({ project, readOnly }) {
   const deleteProject = useDDLStore((state) => state.deleteProject);
   const [selectedTag, setSelectedTag] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('All');
+  const [search, setSearch] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
   const [formState, setFormState] = useState({ open: false, decision: null });
   const [projectFormOpen, setProjectFormOpen] = useState(false);
   const [presentationOpen, setPresentationOpen] = useState(false);
@@ -563,6 +610,11 @@ function ProjectPage({ project, readOnly }) {
   const visibleDecisions = decisions
     .filter((decision) => selectedTag === 'All' || (decision.tags || []).includes(selectedTag))
     .filter((decision) => selectedStatus === 'All' || decision.status === selectedStatus)
+    .filter((decision) =>
+      search === '' ||
+      decision.title.toLowerCase().includes(search.toLowerCase()) ||
+      decision.description.toLowerCase().includes(search.toLowerCase())
+    )
     .sort((left, right) => new Date(right.dateChanged) - new Date(left.dateChanged));
 
   const decisionsThisMonth = visibleDecisions.filter((decision) => {
@@ -611,7 +663,7 @@ function ProjectPage({ project, readOnly }) {
           ) : null}
           <button className="btn btn-ghost" type="button" onClick={handleShare}>
             <Copy size={16} />
-            {copied ? 'Copied share link' : 'Copy share link'}
+            {copied ? 'Link copied' : 'Copy share link'}
           </button>
           <button className="btn btn-primary" type="button" onClick={() => setPresentationOpen(true)}>
             <Play size={16} />
@@ -624,33 +676,20 @@ function ProjectPage({ project, readOnly }) {
         <section className="share-hero panel">
           <div className="overview-copy">
             <div className="eyebrow">Public share view</div>
-            <h2>{project.name} in read-only mode</h2>
+            <h2>{project.name} (Read-only)</h2>
             <p>
-              This route mirrors the share-link experience from the PRD: content-first, no edit controls,
-              presentation mode still available, and decision detail pages kept readable for portfolio or client walkthroughs.
+              This secure dashboard provides stakeholders with a clear, read-only view of your project evolution and design rationale.
             </p>
           </div>
           <div className="share-hero-actions">
             <button className="btn btn-ghost" type="button" onClick={() => navigate(`/project/${project.id}`)}>
               <Eye size={16} />
-              Open editable view
+              Switch to editable view
             </button>
           </div>
         </section>
       ) : null}
-      <section className="project-header panel">
-        <div className="project-header-top">
-          <div>
-            <div className="eyebrow">Project detail</div>
-            <h2>{project.name}</h2>
-          </div>
-          <div className="header-badges">
-            <span className="badge badge-brand">{project.category}</span>
-            <span className="badge badge-dark" style={{ background: project.color }}>
-              Accent {project.color}
-            </span>
-          </div>
-        </div>
+      <section className="project-header">
         <div className="stats-grid">
           <Metric label="Total decisions" value={String(decisions.length).padStart(2, '0')} />
           <Metric label="This month" value={String(decisionsThisMonth).padStart(2, '0')} />
@@ -661,17 +700,16 @@ function ProjectPage({ project, readOnly }) {
       {!readOnly ? (
         <section className="project-workspace panel">
           <div className="project-workspace-copy">
-            <div className="eyebrow">Decision workspace</div>
-            <h3>Manage this project after opening the card</h3>
+            <div className="eyebrow">Management Hub</div>
+            <h3>Project Workspace & Controls</h3>
             <p>
-              From here you should be able to add new design decisions, review existing ones, edit them,
-              delete them, and move into presentation or share flows without going back to the dashboard.
+              Use this central hub to log design decisions, track project evolution, and prepare presentations for your stakeholders.
             </p>
           </div>
           <div className="project-workspace-actions">
             <button className="btn btn-primary" type="button" onClick={() => setFormState({ open: true, decision: null })}>
               <Plus size={16} />
-              Add new decision
+              Log New Decision
             </button>
             <button
               className="btn btn-secondary"
@@ -679,11 +717,11 @@ function ProjectPage({ project, readOnly }) {
               onClick={() => addDecision(project.id, createDemoDecision(project, decisions.length))}
             >
               <Play size={16} />
-              Generate starter decision
+              Create Demo Decision
             </button>
             <button className="btn btn-ghost" type="button" onClick={() => setProjectFormOpen(true)}>
               <Pencil size={16} />
-              Edit project details
+              Workspace Settings
             </button>
             <button
               className="btn btn-danger"
@@ -696,139 +734,138 @@ function ProjectPage({ project, readOnly }) {
               }}
             >
               <Trash2 size={16} />
-              Delete project
+              Delete workspace
             </button>
           </div>
         </section>
       ) : null}
 
-      <section className="dashboard-toolbar" data-print-hidden="true">
-        <div className="filter-group">
-          <div className="eyebrow">Tags</div>
-          <div className="filter-row">
-            {['All', ...tags].map((tag) => (
-              <button
-                key={tag}
-                className={`chip ${selectedTag === tag ? 'chip-active' : ''}`}
-                type="button"
-                onClick={() => setSelectedTag(tag)}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="filter-group">
-          <div className="eyebrow">Status</div>
-          <div className="filter-row">
-            {statuses.map((status) => (
-              <button
-                key={status}
-                className={`chip ${selectedStatus === status ? 'chip-active' : ''}`}
-                type="button"
-                onClick={() => setSelectedStatus(status)}
-              >
-                {status}
-              </button>
-            ))}
-          </div>
-        </div>
-        {!readOnly ? (
-          <div className="button-row">
-            <button
-              className="btn btn-secondary"
-              type="button"
-              onClick={() => addDecision(project.id, createDemoDecision(project, decisions.length))}
-            >
-              <Play size={16} />
-              Add starter decision
-            </button>
-            <button className="btn btn-primary" type="button" onClick={() => setFormState({ open: true, decision: null })}>
-              <Plus size={16} />
-              Add new decision
-            </button>
-          </div>
-        ) : null}
-      </section>
-
       {visibleDecisions.length ? (
         <section className="decision-section">
           <div className="section-heading-row">
-            <div>
-              <div className="eyebrow">Decision timeline</div>
-              <h3>{visibleDecisions.length} decisions in view</h3>
+            <div className="search-filter-belt">
+              <label className="search-field">
+                <Search size={16} />
+                <input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Search titles, tags, or descriptions..."
+                />
+                <button
+                  type="button"
+                  className={`filter-toggle ${showFilters ? 'active' : ''}`}
+                  onClick={() => setShowFilters(!showFilters)}
+                >
+                  <Filter size={16} />
+                </button>
+              </label>
+
+              {showFilters && (
+                <div className="filter-popover panel">
+                  <div className="filter-group">
+                    <div className="eyebrow">Tags</div>
+                    <div className="filter-row">
+                      {['All', ...tags].map((tag) => (
+                        <button
+                          key={tag}
+                          className={`chip ${selectedTag === tag ? 'chip-active' : ''}`}
+                          type="button"
+                          onClick={() => setSelectedTag(tag)}
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="filter-group">
+                    <div className="eyebrow">Status</div>
+                    <div className="filter-row">
+                      {statuses.map((status) => (
+                        <button
+                          key={status}
+                          className={`chip ${selectedStatus === status ? 'chip-active' : ''}`}
+                          type="button"
+                          onClick={() => setSelectedStatus(status)}
+                        >
+                          {status}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <div className="decision-timeline">
-          {visibleDecisions.map((decision) => (
-            <article
-              className="card decision-card interactive"
-              key={decision.id}
-              onClick={() =>
-                navigate(readOnly ? `/share/${project.id}/decision/${decision.id}` : `/project/${project.id}/decision/${decision.id}`)
-              }
-            >
-              <div className="decision-img-row">
-                <div className="decision-img-before">
-                  <img alt={`${decision.title} before`} src={decision.beforeImageUrl} />
-                </div>
-                <div className="decision-img-arrow">
-                  <ArrowRight size={18} />
-                </div>
-                <div className="decision-img-after">
-                  <img alt={`${decision.title} after`} src={decision.afterImageUrl} />
-                </div>
-              </div>
-              <div className="decision-body">
-                <div className="decision-title-row">
-                  <h3 className="decision-title">{decision.title}</h3>
-                  <span className="decision-date">{formatDate(decision.dateChanged)}</span>
-                </div>
-                <p className="decision-desc">{decision.description}</p>
-                {!readOnly ? (
-                  <div className="decision-card-actions" data-print-hidden="true">
-                    <button
-                      className="btn btn-ghost btn-sm"
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setFormState({ open: true, decision });
-                      }}
-                    >
-                      <Pencil size={14} />
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        if (window.confirm(`Delete "${decision.title}"?`)) {
-                          deleteDecision(decision.id);
-                        }
-                      }}
-                    >
-                      <Trash2 size={14} />
-                      Delete
-                    </button>
+            {visibleDecisions.map((decision) => (
+              <article
+                className="card decision-card interactive"
+                key={decision.id}
+                onClick={() =>
+                  navigate(readOnly ? `/share/${project.id}/decision/${decision.id}` : `/project/${project.id}/decision/${decision.id}`)
+                }
+              >
+                <div className="decision-img-row">
+                  <div className="decision-img-before">
+                    <img alt={`${decision.title} before`} src={decision.beforeImageUrl} />
                   </div>
-                ) : null}
-                <div className="decision-chips">
-                  <span className={`badge ${statusClass[decision.status]}`}>{decision.status}</span>
-                  {(decision.tags || []).slice(0, 3).map((tag, index) => (
-                    <span className={`tag tag-${(index % 8) + 1}`} key={tag}>
-                      {tag}
-                    </span>
-                  ))}
-                  {(decision.tags || []).length > 3 ? <span className="tag tag-6">+{decision.tags.length - 3}</span> : null}
-                  <span className="decision-open-hint">
-                    <ExternalLink size={12} />
-                    Open detail
-                  </span>
+                  <div className="decision-img-arrow">
+                    <ArrowRight size={18} />
+                  </div>
+                  <div className="decision-img-after">
+                    <img alt={`${decision.title} after`} src={decision.afterImageUrl} />
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
+                <div className="decision-body">
+                  <div className="decision-title-row">
+                    <h3 className="decision-title">{decision.title}</h3>
+                    <span className="decision-date">{formatDate(decision.dateChanged)}</span>
+                  </div>
+                  <p className="decision-desc">{decision.description}</p>
+                  {!readOnly ? (
+                    <div className="decision-card-actions" data-print-hidden="true">
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setFormState({ open: true, decision });
+                        }}
+                      >
+                        <Pencil size={14} />
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          if (window.confirm(`Delete "${decision.title}"?`)) {
+                            deleteDecision(decision.id);
+                          }
+                        }}
+                      >
+                        <Trash2 size={14} />
+                        Delete
+                      </button>
+                    </div>
+                  ) : null}
+                  <div className="decision-chips">
+                    <span className={`badge ${statusClass[decision.status]}`}>{decision.status}</span>
+                    {(decision.tags || []).slice(0, 3).map((tag, index) => (
+                      <span className={`tag tag-${(index % 8) + 1}`} key={tag}>
+                        {tag}
+                      </span>
+                    ))}
+                    {(decision.tags || []).length > 3 ? <span className="tag tag-6">+{decision.tags.length - 3}</span> : null}
+                    <span className="decision-open-hint">
+                      <ExternalLink size={12} />
+                      Open detail
+                    </span>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
         </section>
       ) : (
@@ -1033,31 +1070,101 @@ function DecisionPage({ project, decision, readOnly }) {
   );
 }
 
+function Breadcrumbs() {
+  const location = useLocation();
+  const params = useParams();
+  const getProjectById = useDDLStore((state) => state.getProjectById);
+  const getDecisionById = useDDLStore((state) => state.getDecisionById);
+
+  const pathnames = location.pathname.split('/').filter((x) => x);
+
+  // Don't show breadcrumbs on setup/splash screens
+  if (pathnames.length === 0 || pathnames[0] === 'setup') {
+    return null;
+  }
+
+  const isProjectFlow = pathnames.includes('projects') || pathnames.includes('project');
+  const rootLabel = isProjectFlow ? 'My Projects' : 'Overview';
+  const rootLink = isProjectFlow ? '/projects' : '/dashboard';
+
+  return (
+    <nav className="breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li>
+          <Link to={rootLink}>{rootLabel}</Link>
+        </li>
+        {params.projectId && (
+          <li>
+            <span className="breadcrumb-separator">/</span>
+            <Link to={`/project/${params.projectId}`}>
+              {getProjectById(params.projectId)?.name || 'Project'}
+            </Link>
+          </li>
+        )}
+        {params.decisionId && (
+          <li>
+            <span className="breadcrumb-separator">/</span>
+            <span className="breadcrumb-current">
+              {getDecisionById(params.decisionId)?.title || 'Decision'}
+            </span>
+          </li>
+        )}
+      </ol>
+    </nav>
+  );
+}
+
 function AppShell({ title, description, actions, children }) {
   return (
     <div className="app-shell">
       <aside className="app-sidebar" data-print-hidden="true">
-        <div>
-          <div className="sidebar-brand">
-            <span>DDL</span>
-            <small>TRACE</small>
-          </div>
-          <p className="sidebar-copy">A decision archive for product design stories, rationale, and evolution.</p>
+        <div className="sidebar-top">
+          <Link to="/dashboard" className="sidebar-brand-link">
+            <div className="sidebar-brand">
+
+              <small>TRACE</small>
+            </div>
+          </Link>
+          <p className="sidebar-copy">Document the rationale behind every design move.</p>
+
+          <nav className="sidebar-nav">
+            <div className="eyebrow">Explore</div>
+            <NavLink to="/dashboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+              <LayoutGrid size={18} />
+              <span>Overview</span>
+            </NavLink>
+            <NavLink to="/projects" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+              <FolderOpen size={18} />
+              <span>My Projects</span>
+            </NavLink>
+          </nav>
+
+          <nav className="sidebar-nav">
+            <div className="eyebrow">Resources</div>
+            <NavLink to="/design-system" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+              <BookOpen size={18} />
+              <span>Design System</span>
+            </NavLink>
+          </nav>
+          <nav className="sidebar-nav">
+            <div className="eyebrow">System</div>
+            <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+              <Settings size={18} />
+              <span>Settings</span>
+            </NavLink>
+          </nav>
         </div>
+
         <div className="sidebar-panel">
-          <div className="eyebrow">Core features</div>
-          <ul>
-            <li>Projects dashboard</li>
-            <li>Decision timeline</li>
-            <li>Presentation mode</li>
-            <li>Share-ready read only views</li>
-          </ul>
+          <div className="eyebrow">Quick tips</div>
+          <p className="sidebar-tip"><strong>Presentation Mode</strong>: Ideal for client reviews and rationale walkthroughs.</p>
         </div>
       </aside>
       <main className="app-main">
+        <Breadcrumbs />
         <header className="topbar" data-print-hidden="true">
           <div>
-            <div className="eyebrow">Design Decision Log</div>
+            <div className="eyebrow">Local workspace</div>
             <h1>{title}</h1>
             <p>{description}</p>
           </div>
@@ -1073,7 +1180,7 @@ function ProjectModal({ project, onClose, onSave }) {
   const [form, setForm] = useState(project || emptyProjectForm);
 
   return (
-    <ModalFrame title={project ? 'Edit project' : 'Create project'} onClose={onClose}>
+    <ModalFrame title={project ? 'Workspace Settings' : 'Initialize Workspace'} onClose={onClose}>
       <form
         className="stack-20"
         onSubmit={(event) => {
@@ -1104,7 +1211,7 @@ function ProjectModal({ project, onClose, onSave }) {
             Cancel
           </button>
           <button className="btn btn-primary" type="submit" disabled={!form.name.trim()}>
-            Save project
+            {project ? 'Update Workspace' : 'Initialize Workspace'}
           </button>
         </div>
       </form>
@@ -1216,8 +1323,8 @@ function DecisionModal({ project, decision, decisions, onClose, onSave }) {
         {restoreAvailable ? (
           <div className="restore-banner">
             <div>
-              <strong>Saved draft detected.</strong>
-              <p>You can restore your last unsent decision draft for this project.</p>
+              <strong>In-Progress Draft Detected.</strong>
+              <p>You can restore your most recent unsaved progress for this project.</p>
             </div>
             <button className="btn btn-secondary btn-sm" type="button" onClick={restoreDraft}>
               Restore draft
@@ -1232,7 +1339,7 @@ function DecisionModal({ project, decision, decisions, onClose, onSave }) {
           onChange={(value) => setForm((current) => ({ ...current, description: value }))}
         />
         <Field
-          label="Rationale"
+          label="Design Rationale"
           value={form.rationale}
           multiline
           onChange={(value) => setForm((current) => ({ ...current, rationale: value }))}
@@ -1246,7 +1353,7 @@ function DecisionModal({ project, decision, decisions, onClose, onSave }) {
             onRemove={(index) => removeListItem('advantages', index)}
           />
           <ListEditor
-            label="Disadvantages"
+            label="Considerations"
             items={form.disadvantages}
             onAdd={() => addListItem('disadvantages')}
             onChange={(index, value) => setListValue('disadvantages', index, value)}
@@ -1310,7 +1417,7 @@ function DecisionModal({ project, decision, decisions, onClose, onSave }) {
             type="submit"
             disabled={!form.title.trim() || !form.description.trim() || !form.rationale.trim() || !form.advantages.some((item) => item.trim())}
           >
-            Save decision
+            {decision ? 'Update Decision' : 'Log Decision'}
           </button>
         </div>
       </form>
@@ -1322,7 +1429,7 @@ function DecisionDetailModal({ decision, decisions, readOnly, onClose, onEdit, o
   const index = decisions.findIndex((item) => item.id === decision.id);
 
   return (
-    <ModalFrame title="Decision detail" onClose={onClose} wide>
+    <ModalFrame title="Decision Details" onClose={onClose} wide>
       <div className="detail-grid">
         <div className="detail-images">
           <img alt={`${decision.title} before`} src={decision.beforeImageUrl} />
@@ -1337,9 +1444,9 @@ function DecisionDetailModal({ decision, decisions, readOnly, onClose, onEdit, o
             Date changed: {formatDate(decision.dateChanged)} | Logged: {formatDate(decision.createdAt)}
           </p>
           <SectionBlock label="Description" body={decision.description} />
-          <SectionBlock label="Rationale" body={decision.rationale} />
+          <SectionBlock label="Design Rationale" body={decision.rationale} />
           <ListBlock label="Advantages" items={decision.advantages} />
-          {decision.disadvantages?.length ? <ListBlock label="Disadvantages" items={decision.disadvantages} /> : null}
+          {decision.disadvantages?.length ? <ListBlock label="Considerations" items={decision.disadvantages} /> : null}
           <div className="decision-chips">
             {(decision.tags || []).map((tag, indexValue) => (
               <span className={`tag tag-${(indexValue % 8) + 1}`} key={tag}>
@@ -1712,6 +1819,23 @@ function ListBlock({ label, items }) {
         ))}
       </ul>
     </section>
+  );
+}
+
+function DesignSystemPage() {
+  return (
+    <AppShell 
+      title="Design System" 
+      description="Interactive component and style guide for the TRACE project."
+    >
+      <div className="panel" style={{ height: 'calc(100vh - 180px)', padding: 0, overflow: 'hidden' }}>
+        <iframe 
+          src="/DDL_design_system.html" 
+          style={{ width: '100%', height: '100%', border: 'none' }} 
+          title="TRACE Design System" 
+        />
+      </div>
+    </AppShell>
   );
 }
 
