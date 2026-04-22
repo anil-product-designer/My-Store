@@ -142,4 +142,23 @@ FOR ALL USING (true) WITH CHECK (true);
 
 CREATE POLICY "Anon write" ON design_decisions
 FOR ALL USING (true) WITH CHECK (true);`,
+  `-- Storage RLS Policies
+-- Note: You MUST manually create the 'design-images' bucket in the Supabase Dashboard first.
+-- Go to Storage -> New Bucket -> Name it "design-images" -> Make it Public.
+
+CREATE POLICY "Public Access"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'design-images');
+
+CREATE POLICY "Anon Uploads"
+ON storage.objects FOR INSERT
+WITH CHECK (bucket_id = 'design-images');
+
+CREATE POLICY "Anon Updates"
+ON storage.objects FOR UPDATE
+USING (bucket_id = 'design-images');
+
+CREATE POLICY "Anon Deletes"
+ON storage.objects FOR DELETE
+USING (bucket_id = 'design-images');`,
 ];

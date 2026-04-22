@@ -294,13 +294,25 @@ function SetupScreen() {
 
         <section className="panel">
           <div className="section-heading">
-            <span className="eyebrow">SQL</span>
-            <h2>One-time database setup</h2>
+          <div className="section-heading">
+            <span className="eyebrow">Database & Storage Setup</span>
+            <h2>One-time initial configuration</h2>
           </div>
-          <p className="panel-copy">
-            If you only want to review the prototype first, use <strong>Continue in demo mode</strong>. You can
-            connect Supabase later without changing the frontend direction.
-          </p>
+          <div className="panel-copy">
+            <p style={{ marginBottom: '16px' }}>
+              If you only want to review the prototype first, use <strong>Continue in demo mode</strong>. You can
+              connect Supabase later without changing the frontend direction.
+            </p>
+            <div style={{ padding: '16px', background: 'var(--brand-faint)', borderRadius: 'var(--radius-md)', border: '1px solid var(--brand-dim)', marginBottom: '16px' }}>
+               <h3 style={{ margin: '0 0 8px', fontSize: '13px', fontFamily: 'var(--mono)', color: 'var(--brand-dim)' }}>Important: Enable Image Uploads</h3>
+               <p style={{ margin: 0, fontSize: '13px', color: 'var(--g700)', lineHeight: '1.5' }}>
+                 Before running the SQL below, you <strong>must</strong> manually create a storage bucket in your Supabase dashboard.<br/>
+                 1. Go to <strong>Storage</strong> → <strong>New Bucket</strong><br/>
+                 2. Name the bucket exactly <code style={{ background: 'var(--white)', padding: '2px 6px', borderRadius: '4px', fontFamily: 'var(--mono)', border: '1px solid var(--g200)' }}>design-images</code><br/>
+                 3. Enable the <strong>Public bucket</strong> toggle.
+               </p>
+            </div>
+          </div>
           <div className="sql-stack">
             {sqlSetupBlocks.map((block, index) => (
               <div className="sql-card" key={block}>
@@ -423,7 +435,7 @@ function ProjectsPage() {
       actions={
         <button className="btn btn-primary" type="button" onClick={() => setModalState({ type: 'create', project: null })}>
           <Plus size={16} />
-          Initialize Workspace
+          Create new project
         </button>
       }
     >
@@ -1828,15 +1840,15 @@ function ListBlock({ label, items }) {
 
 function DesignSystemPage() {
   return (
-    <AppShell 
-      title="Design System" 
+    <AppShell
+      title="Design System"
       description="Interactive component and style guide for the TRACE project."
     >
       <div className="panel" style={{ height: 'calc(100vh - 180px)', padding: 0, overflow: 'hidden' }}>
-        <iframe 
-          src="/DDL_design_system.html" 
-          style={{ width: '100%', height: '100%', border: 'none' }} 
-          title="TRACE Design System" 
+        <iframe
+          src="/DDL_design_system.html"
+          style={{ width: '100%', height: '100%', border: 'none' }}
+          title="TRACE Design System"
         />
       </div>
     </AppShell>
