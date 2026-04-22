@@ -294,7 +294,6 @@ function SetupScreen() {
 
         <section className="panel">
           <div className="section-heading">
-          <div className="section-heading">
             <span className="eyebrow">Database & Storage Setup</span>
             <h2>One-time initial configuration</h2>
           </div>
